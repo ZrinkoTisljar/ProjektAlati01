@@ -1,0 +1,24 @@
+﻿@model ProjektAlati.Models.Rezervacija
+
+@{
+    ViewBag.Title = "Rezerviraj alat";
+}
+
+<h2>Rezerviraj alat</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        @Html.LabelFor(m => m.AlatId)
+        @Html.DropDownList("AlatId", null, htmlAttributes: new { @class = "form-control" })
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.DatumDo)
+        @Html.TextBoxFor(m => m.DatumDo, new { @class = "form-control", type = "date" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Rezerviraj</button>
+}

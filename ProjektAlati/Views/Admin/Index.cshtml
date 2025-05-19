@@ -1,0 +1,27 @@
+﻿@model List<ProjektAlati.Models.Korisnik>
+
+@{
+    ViewBag.Title = "Admin Panel - Korisnici";
+}
+
+<h2>Korisnici</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Korisničko ime</th>
+            <th>Uloga</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var k in Model)
+        {
+            <tr>
+                <td>@k.Id</td>
+                <td>@k.KorisnickoIme</td>
+                <td>@k.Uloga</td>
+            </tr>
+        }
+    </tbody>
+</table>

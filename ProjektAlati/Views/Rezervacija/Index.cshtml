@@ -1,0 +1,51 @@
+﻿@model List<ProjektAlati.Models.Rezervacija>
+
+//TempData privremeno spemiste
+
+@if (TempData["Poruka"] != null)
+{
+    //to je Bootstrap okvir za zeleni info box
+    <div class="alert alert-success">
+        
+
+
+        @TempData["Poruka"]
+    </div>
+}
+
+
+<h2>Moje rezervacije</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Alat</th>
+            <th>Datum od</th>
+            <th>Datum do</th>
+            <th>Vraćeno</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Alat.Naziv</td>
+                <td>@r.DatumOd.ToShortDateString()</td>
+                <td>@(r.DatumDo?.ToShortDateString() ?? "-")</td>
+
+
+                <td>
+                    @if (r.Vraceno)
+                    {
+                        <span class="text-success">Vraćeno</span>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Vrati alat", "Vrati", "Rezervacija", new { id = r.Id }, new { @class = "btn btn-success btn-sm" })
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

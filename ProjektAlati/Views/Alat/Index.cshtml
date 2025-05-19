@@ -1,0 +1,74 @@
+﻿@model List<ProjektAlati.Models.Alat>
+
+@{
+    ViewBag.Title = "Popis alata";
+}
+
+@if (TempData["Poruka"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Poruka"]
+    </div>
+}
+
+<h2>Popis alata</h2>
+
+<p>
+    @if (Session["Uloga"] != null && Session["Uloga"].ToString() == "admin")
+    {
+        @Html.ActionLink("Dodaj novi alat", "Create", null, new { @class = "btn btn-success" })
+    }
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Naziv</th>
+            <th>Opis</th>
+            <th>Dostupan</th>
+
+            @if (Session["Uloga"] != null && Session["Uloga"].ToString() == "admin")
+            {
+                <th style="width: 150px;">Akcije</th>
+
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var alat in Model)
+        {
+            <tr>
+                <td>@alat.Naziv</td>
+                <td>@alat.Opis</td>
+                <td>@(alat.Dostupan ? "Da" : "Ne")</td>
+                <td>
+
+                    @if (Session["Uloga"] != null && Session["Uloga"].ToString() == "admin")
+                    {
+                        @Html.ActionLink("Uredi", "Edit", new { id = alat.Id }, new { @class = "btn btn-warning btn-sm" })
+                        @Html.ActionLink("Obriši", "Delete", new { id = alat.Id }, new { @class = "btn btn-danger btn-sm ml-2" })
+
+                    }
+                    @if (Session["KorisnikId"] != null && alat.Dostupan)
+                    {
+                        @Html.ActionLink("Rezerviraj", "Create", "Rezervacija", new { alatId = alat.Id }, new { @class = "btn btn-primary btn-sm ml-1" })
+
+                        @Html.ActionLink("Posudi", "Posudi", "Alat", new { id = alat.Id }, new { @class = "btn btn-primary btn-sm" })
+                    }
+
+                    @if (Session["KorisnikId"] != null && ViewBag.MojeRezervacije != null)
+                    {
+                        var rezervacije = ViewBag.MojeRezervacije as List<ProjektAlati.Models.Rezervacija>;
+                        var rezervacija = rezervacije.FirstOrDefault(r => r.AlatId == alat.Id && !r.Vraceno);
+
+                        if (rezervacija != null)
+                        {
+                            @Html.ActionLink("Vrati alat", "Vrati", "Rezervacija", new { id = rezervacija.Id }, new { @class = "btn btn-success btn-sm ml-2" })
+                        }
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

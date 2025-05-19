@@ -1,0 +1,19 @@
+﻿<h2>Prijava</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <label>Korisničko ime</label>
+        <input type="text" name="korisnickoIme" />
+    </div>
+    <div>
+        <label>Lozinka</label>
+        <input type="password" name="lozinka" />
+    </div>
+    <button type="submit">Prijava</button>
+}
+
+@if (ViewBag.Poruka != null)
+{
+    <p style="color:red">@ViewBag.Poruka</p>
+}

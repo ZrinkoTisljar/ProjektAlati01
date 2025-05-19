@@ -1,0 +1,16 @@
+﻿@model ProjektAlati.Models.Korisnik
+
+<h2>Registracija</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.LabelFor(m => m.KorisnickoIme)
+        @Html.TextBoxFor(m => m.KorisnickoIme)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Lozinka)
+        @Html.PasswordFor(m => m.Lozinka)
+    </div>
+    <button type="submit">Registriraj se</button>
+}
