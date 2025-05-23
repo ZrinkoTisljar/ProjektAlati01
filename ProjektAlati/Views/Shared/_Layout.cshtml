@@ -23,9 +23,18 @@
         @Html.ActionLink("Prijava", "Login", "Korisnik", null, new { @class = "btn btn-link" }) |
         @Html.ActionLink("Registracija", "Register", "Korisnik", null, new { @class = "btn btn-link" })
 
-        @if (Session["KorisnikId"] != null)
+        @if (Session["KorisnickoIme"] != null)
         {
-            <li>@Html.ActionLink("Moje rezervacije", "Index", "Rezervacija")</li>
+            <ul class="nav navbar-nav navbar-text">
+                <li class="navbar-text">Dobrodošao, @Session["KorisnickoIme"]</li>
+                <li>@Html.ActionLink("Odjava", "Logout", "Korisnik", null, new { @class = "btn btn-link" })</li>
+            </ul>
+        }
+        else
+        {
+            <ul class="nav navbar-nav navbar-text">
+                
+            </ul>
         }
 
 
@@ -55,9 +64,14 @@
 
                     @if (Session["KorisnikId"] != null)
                     {
-                        <li>@Html.ActionLink("Moje rezervacije", "Index", "Rezervacija")</li>
+                        //<li>@Html.ActionLink("Moje rezervacije", "Index", "Rezervacija")</li>
                     }
 
+
+                    @if (Session["Uloga"]?.ToString() != "admin" && Session["KorisnikId"] != null)
+                    {
+                        <li>@Html.ActionLink("Evidencija korištenja", "MojaEvidencija", "Posudba")</li>
+                    }
 
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>

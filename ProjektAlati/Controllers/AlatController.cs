@@ -14,7 +14,7 @@ namespace ProjektAlati.Controllers
         // GET: Alat
         public ActionResult Index()
         {
-            var alati = db.Alati.ToList(); // EF će ovdje automatski stvoriti tablicu ako ne postoji
+            /*var alati = db.Alati.ToList(); // EF će ovdje automatski stvoriti tablicu ako ne postoji
 
 
             // Ako je korisnik prijavljen — dohvati njegove rezervacije
@@ -28,6 +28,51 @@ namespace ProjektAlati.Controllers
                 // Pošalji aktivne rezervacije u ViewBag
                 ViewBag.MojeRezervacije = aktivne;
             }
+
+            return View(alati);*/
+
+
+
+            if (Session["KorisnikId"] != null)
+            {
+                int korisnikId = Convert.ToInt32(Session["KorisnikId"]);
+                var mojePosudbe = db.Posudbe
+                                    .Where(p => p.KorisnikId == korisnikId && p.DatumPovratka >= DateTime.Now)
+                                    .ToList();
+
+                ViewBag.MojePosudbe = mojePosudbe;
+            }
+            /*var alati = db.Alati.ToList();*/
+            var alati = db.Alati.OrderByDescending(a => a.Id).ToList();
+
+            // Aktivne rezervacije korisnika
+            if (Session["KorisnikId"] != null)
+            {
+                int korisnikId = Convert.ToInt32(Session["KorisnikId"]);
+                var aktivne = db.Rezervacije
+                                .Where(r => r.KorisnikId == korisnikId && !r.Vraceno)
+                               
+                                .ToList();
+                ViewBag.MojeRezervacije = aktivne;
+            }
+
+            // Aktivne posudbe (Vraceno == false)
+            /* var aktivnePosudbe = db.Rezervacije
+                 .Where(r => !r.Vraceno)
+                 .GroupBy(r => r.AlatId)
+                 .Select(g => g.OrderByDescending(r => r.DatumOd).FirstOrDefault())
+                 .ToDictionary(r => r.AlatId, r => r);
+ */
+                var aktivnePosudbe = db.Posudbe
+               .Where(p => p.DatumPovratka >= DateTime.Now)
+               .GroupBy(p => p.AlatId)
+               .Select(g => g.OrderByDescending(p => p.DatumPosudbe).FirstOrDefault())
+               .ToDictionary(p => p.AlatId, p => p);
+
+            ViewBag.AktivnePosudbe = aktivnePosudbe;
+
+
+            ViewBag.AktivnePosudbe = aktivnePosudbe;
 
             return View(alati);
         }
@@ -76,6 +121,23 @@ namespace ProjektAlati.Controllers
             if (alat == null)
                 return HttpNotFound();
 
+            //
+            // Provjera: je li alat posuđen ili rezerviran
+            /* bool imaPosudbu = db.Posudbe.Any(p => p.AlatId == id);
+             bool imaRezervaciju = db.Rezervacije.Any(r => r.AlatId == id);*/
+
+            /*bool imaPosudbu = db.Posudbe.Any(p => p.AlatId == id && p.DatumPovratka == null);*/
+
+            bool imaPosudbu = !alat.Dostupan;
+            bool imaRezervaciju = db.Rezervacije.Any(r => r.AlatId == id && !r.Vraceno);
+
+
+            if (imaPosudbu || imaRezervaciju)
+            {
+                TempData["Greska"] = "Alat je trenutno posuđen i ne može se uređivati.";
+                return RedirectToAction("Index");
+            }
+            //
             return View(alat);
         }
 
@@ -89,6 +151,15 @@ namespace ProjektAlati.Controllers
             //samo za admina
             if (Session["Uloga"]?.ToString() != "admin")
                 return new HttpUnauthorizedResult();
+            //
+
+
+            //
+         
+
+           
+
+
             //
 
             if (ModelState.IsValid)
@@ -129,6 +200,24 @@ namespace ProjektAlati.Controllers
                 return new HttpUnauthorizedResult();
 
             Alat alat = db.Alati.Find(id);
+
+            // Provjera: je li alat povezan s posudbama ili rezervacijama
+            /*  bool imaPosudbu = db.Posudbe.Any(p => p.AlatId == id);
+              bool imaRezervaciju = db.Rezervacije.Any(r => r.AlatId == id);*/
+
+            /*bool imaPosudbu = db.Posudbe.Any(p => p.AlatId == id && p.DatumPovratka == null);*/
+            bool imaPosudbu = !alat.Dostupan;
+            bool imaRezervaciju = db.Rezervacije.Any(r => r.AlatId == id && !r.Vraceno);
+
+
+            if (imaPosudbu || imaRezervaciju)
+            {
+                TempData["Greska"] = "Alat je trenutno posuđen i ne može se obrisati.";
+                return RedirectToAction("Index");
+            }
+
+
+
             db.Alati.Remove(alat);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -138,6 +227,10 @@ namespace ProjektAlati.Controllers
         //metoda za posudbu
         public ActionResult Posudi(int id)
         {
+
+            if (Session["Uloga"]?.ToString() == "admin")
+                return new HttpUnauthorizedResult(); // ili RedirectToAction("Index", "Home");
+
             if (Session["KorisnikId"] == null)
                 return RedirectToAction("Login", "Korisnik");
 

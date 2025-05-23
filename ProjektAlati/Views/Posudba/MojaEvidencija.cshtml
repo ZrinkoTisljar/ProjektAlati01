@@ -1,0 +1,27 @@
+﻿@model List<ProjektAlati.Models.Posudba>
+
+@{
+    ViewBag.Title = "Evidencija korištenja";
+}
+
+<h2>Evidencija korištenja i vraćanja alata</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Alat</th>
+            <th>Datum posudbe</th>
+            <th>Datum povratka</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+        <tr>
+            <td>@p.Alat.Naziv</td>
+            <td>@p.DatumPosudbe.ToString("dd.MM.yyyy. HH:mm")</td>
+            <td>@(p.DatumPovratka.HasValue ? p.DatumPovratka.Value.ToString("dd.MM.yyyy. HH:mm") : "Još nije vraćen")</td>
+        </tr>
+        }
+    </tbody>
+</table>

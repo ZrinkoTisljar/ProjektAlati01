@@ -16,6 +16,7 @@ namespace ProjektAlati.Models
 
         public DbSet<Rezervacija> Rezervacije { get; set; }
 
+        public DbSet<Posudba> Posudbe { get; set; }
 
     }
 }

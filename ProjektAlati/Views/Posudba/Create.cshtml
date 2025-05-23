@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Posudi alat";
+    var alat = ViewBag.Alat as ProjektAlati.Models.Alat;
+}
+
+<h2>Posudi alat: @alat.Naziv</h2>
+
+@using (Html.BeginForm("Create", "Posudba", FormMethod.Post))
+
+{
+
+    @Html.AntiForgeryToken()
+    @Html.Hidden("AlatId", alat.Id)
+
+    <div class="form-group">
+        <label for="DatumPovratka">Do kada želite posuditi alat:</label>
+        <input type="date" name="DatumPovratka" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Posudi</button>
+}

@@ -32,13 +32,23 @@ namespace ProjektAlati.Controllers
         }
 
         // GET: Rezervacija/Create
-        public ActionResult Create(int? alatId)
-        {
+        /*  public ActionResult Create(int? alatId)
+          {
 
+              if (Session["KorisnikId"] == null)
+                  return RedirectToAction("Login", "Korisnik");
+
+              ViewBag.AlatId = new SelectList(db.Alati, "Id", "Naziv", alatId);
+              return View();
+          }*/
+        public ActionResult Create(int? alatId, DateTime? datumOd)
+        {
             if (Session["KorisnikId"] == null)
                 return RedirectToAction("Login", "Korisnik");
 
             ViewBag.AlatId = new SelectList(db.Alati, "Id", "Naziv", alatId);
+            ViewBag.PredlozenDatum = datumOd;
+
             return View();
         }
 
@@ -54,7 +64,12 @@ namespace ProjektAlati.Controllers
             // 
             rezervacija.KorisnikId = Convert.ToInt32(Session["KorisnikId"]);
             rezervacija.Vraceno = false;
-            rezervacija.DatumOd = DateTime.Now;
+            if (rezervacija.DatumOd < DateTime.Now.Date)
+            {
+                TempData["Greska"] = "Datum početka rezervacije ne može biti u prošlosti.";
+                return RedirectToAction("Create", new { alatId = rezervacija.AlatId });
+            }
+            /*rezervacija.DatumOd = DateTime.Now;*/
 
             db.Rezervacije.Add(rezervacija);
             db.SaveChanges();
@@ -93,6 +108,11 @@ namespace ProjektAlati.Controllers
 
         public ActionResult Vrati(int id)
         {
+            if (Session["Uloga"]?.ToString() == "admin")
+                return new HttpUnauthorizedResult(); // ili RedirectToAction("Index", "Home");
+
+
+
             var rezervacija = db.Rezervacije.FirstOrDefault(r => r.Id == id && !r.Vraceno);
 
             if (rezervacija == null)
@@ -110,7 +130,29 @@ namespace ProjektAlati.Controllers
             db.SaveChanges();
 
             TempData["Poruka"] = "Alat je uspješno vraćen.";
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Alat");
         }
+
+
+        public ActionResult Prekini(int id)
+        {
+            if (Session["KorisnikId"] == null)
+                return RedirectToAction("Login", "Korisnik");
+
+            var rezervacija = db.Rezervacije.FirstOrDefault(r => r.Id == id && !r.Vraceno);
+
+            if (rezervacija == null)
+                return HttpNotFound();
+
+            if (rezervacija.KorisnikId != Convert.ToInt32(Session["KorisnikId"]))
+                return new HttpUnauthorizedResult();
+
+            db.Rezervacije.Remove(rezervacija);
+            db.SaveChanges();
+
+            TempData["Poruka"] = "Rezervacija je uspješno prekinuta.";
+            return RedirectToAction("Index", "Alat");
+        }
+
     }
 }

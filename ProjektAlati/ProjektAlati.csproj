@@ -186,12 +186,14 @@
     <Compile Include="Controllers\AlatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\KorisnikController.cs" />
+    <Compile Include="Controllers\PosudbaController.cs" />
     <Compile Include="Controllers\RezervacijaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Alat.cs" />
     <Compile Include="Models\Korisnik.cs" />
+    <Compile Include="Models\Posudba.cs" />
     <Compile Include="Models\ProjektAlatiContext.cs" />
     <Compile Include="Models\Rezervacija.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -241,6 +243,8 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Rezervacija\Index.cshtml" />
     <Content Include="Views\Rezervacija\Create.cshtml" />
+    <Content Include="Views\Posudba\Create.cshtml" />
+    <Content Include="Views\Posudba\MojaEvidencija.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

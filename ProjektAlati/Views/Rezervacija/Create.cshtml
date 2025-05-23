@@ -1,5 +1,12 @@
 ﻿@model ProjektAlati.Models.Rezervacija
 
+@if (ViewBag.PredlozenDatum != null)
+{
+    <div class="alert alert-info">
+        Možete rezervirati ovaj alat od: <strong>@(((DateTime)ViewBag.PredlozenDatum).ToString("dd.MM.yyyy."))</strong>
+    </div>
+}
+
 @{
     ViewBag.Title = "Rezerviraj alat";
 }
@@ -10,15 +17,16 @@
 {
     @Html.AntiForgeryToken()
 
-    <div>
-        @Html.LabelFor(m => m.AlatId)
-        @Html.DropDownList("AlatId", null, htmlAttributes: new { @class = "form-control" })
-    </div>
+<div>
+    @Html.HiddenFor(m => m.AlatId)
+</div>
 
-    <div>
-        @Html.LabelFor(m => m.DatumDo)
-        @Html.TextBoxFor(m => m.DatumDo, new { @class = "form-control", type = "date" })
-    </div>
+<div>
+    <label for="DatumOd">Datum početka rezervacije:</label>
+    <input type="date" name="DatumOd" class="form-control" required
+           value="@ViewBag.PredlozenDatum?.ToString(" yyyy-MM-dd")"
+           min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+</div>
 
     <button type="submit" class="btn btn-primary">Rezerviraj</button>
 }
