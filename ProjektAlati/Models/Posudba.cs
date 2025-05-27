@@ -19,6 +19,7 @@ namespace ProjektAlati.Models
         [ForeignKey("Korisnik")]
         public int KorisnikId { get; set; }
         public virtual Korisnik Korisnik { get; set; }
+        public bool Vraceno { get; set; }
 
         public DateTime DatumPosudbe { get; set; }
         public DateTime? DatumPovratka { get; set; }

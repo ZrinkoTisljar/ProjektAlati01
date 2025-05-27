@@ -10,13 +10,13 @@ namespace ProjektAlati.Models
     {
         public ProjektAlatiContext() : base("name=ProjektAlatiConnection") { }
 
-        public DbSet<Alat> Alati { get; set; }
+        public virtual DbSet<Alat> Alati { get; set; }  //Moq može mockirati samo virtual metode/propertije.
 
-        public DbSet<Korisnik> Korisnici { get; set; }
+        public virtual DbSet<Korisnik> Korisnici { get; set; }
 
-        public DbSet<Rezervacija> Rezervacije { get; set; }
+        public virtual DbSet<Rezervacija> Rezervacije { get; set; }
 
-        public DbSet<Posudba> Posudbe { get; set; }
+        public virtual DbSet<Posudba> Posudbe { get; set; }
 
     }
 }

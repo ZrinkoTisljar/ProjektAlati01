@@ -25,27 +25,35 @@
 
 @if (TempData["Poruka"] != null)
 {
-<div class="modal fade" id="porukaModal" tabindex="-1" role="dialog" aria-labelledby="porukaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-success">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="porukaModalLabel">
-                    ✅ Obavijest
-                </h5>
-            </div>
-            <div class="modal-body">
-                @TempData["Poruka"]
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">U redu</button>
+    <div class="modal fade" id="porukaModal" tabindex="-1" role="dialog" aria-labelledby="porukaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-success">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="porukaModalLabel">
+                        ✅ Obavijest
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    @TempData["Poruka"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">U redu</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 <h2>Popis alata</h2>
 
+@using (Html.BeginForm("Index", "Alat", FormMethod.Get))
+{
+    <p>
+        Pretraga:
+        @Html.TextBox("search", ViewBag.Search as string, new { @class = "form-control", @placeholder = "Unesi naziv ili opis alata", style = "width: 300px; display: inline;" })
+        <input type="submit" value="Pretraži" class="btn btn-primary ml-2" />
+    </p>
+}
 <p>
     @if (Session["Uloga"] != null && Session["Uloga"].ToString() == "admin")
     {
@@ -90,26 +98,26 @@
                         {
                             var datumVracanja = aktivnaPosudba.DatumPovratka;
 
-                    <div class="text-danger" style="font-size: small;">
-                        Zauzet do: @(datumVracanja.HasValue ? datumVracanja.Value.ToString("dd.MM.yyyy.") : "")<br />
+                            <div class="text-danger" style="font-size: small;">
+                                Zauzet do: @(datumVracanja.HasValue ? datumVracanja.Value.ToString("dd.MM.yyyy.") : "")<br />
 
-                        @if (Session["Uloga"] == null || Session["Uloga"].ToString() != "admin")
-                        {
-                            var korisnikId = Convert.ToInt32(Session["KorisnikId"]);
-                            var korisnickeRezervacije = ViewBag.MojeRezervacije as List<ProjektAlati.Models.Rezervacija>;
-                            var postojiRezervacija = korisnickeRezervacije != null && korisnickeRezervacije
-                                .Any(r => r.AlatId == alat.Id && r.DatumOd > datumVracanja);
+                                @if (Session["Uloga"] == null || Session["Uloga"].ToString() != "admin")
+                                {
+                                    var korisnikId = Convert.ToInt32(Session["KorisnikId"]);
+                                    var korisnickeRezervacije = ViewBag.MojeRezervacije as List<ProjektAlati.Models.Rezervacija>;
+                                    var postojiRezervacija = korisnickeRezervacije != null && korisnickeRezervacije
+                                        .Any(r => r.AlatId == alat.Id && r.DatumOd > datumVracanja);
 
-                            if (!postojiRezervacija)
-                            {
-                               // @Html.ActionLink("Rezerviraj od tog datuma", "Create", "Rezervacija", new
-                               // {
-                                   // alatId = alat.Id,
-                                 //   datumOd = datumVracanja.Value.ToString("yyyy-MM-dd")
-                               // }, new { @class = "btn btn-sm btn-outline-primary mt-1" })
-                            }
-                        }
-                    </div>
+                                    if (!postojiRezervacija)
+                                    {
+                                        // @Html.ActionLink("Rezerviraj od tog datuma", "Create", "Rezervacija", new
+                                        // {
+                                        // alatId = alat.Id,
+                                        //   datumOd = datumVracanja.Value.ToString("yyyy-MM-dd")
+                                        // }, new { @class = "btn btn-sm btn-outline-primary mt-1" })
+                                    }
+                                }
+                            </div>
                         }
                     }
                 </td>
@@ -125,7 +133,7 @@
                     @if (Session["Uloga"]?.ToString() != "admin" && Session["KorisnikId"] != null && alat.Dostupan)
 
                     {
-                       // @Html.ActionLink("Rezerviraj", "Create", "Rezervacija", new { alatId = alat.Id }, new { @class = "btn btn-primary btn-sm ml-1" })
+                        // @Html.ActionLink("Rezerviraj", "Create", "Rezervacija", new { alatId = alat.Id }, new { @class = "btn btn-primary btn-sm ml-1" })
 
                         @Html.ActionLink("Posudi", "Create", "Posudba", new { id = alat.Id }, new { @class = "btn btn-primary btn-sm" })
 
@@ -138,7 +146,7 @@
 
                         if (rezervacija != null && rezervacija.KorisnikId == Convert.ToInt32(Session["KorisnikId"]))
                         {
-                           // @Html.ActionLink("Prekini rezervaciju", "Prekini", "Rezervacija", new { id = rezervacija.Id }, new { @class = "btn btn-danger btn-sm ml-2" })
+                            // @Html.ActionLink("Prekini rezervaciju", "Prekini", "Rezervacija", new { id = rezervacija.Id }, new { @class = "btn btn-danger btn-sm ml-2" })
                         }
                     }
 
@@ -146,13 +154,14 @@
                     @if (ViewBag.MojePosudbe != null)
                     {
                         var posudbe = ViewBag.MojePosudbe as List<ProjektAlati.Models.Posudba>;
-                        var aktivnaPosudba = posudbe?.FirstOrDefault(p => p.AlatId == alat.Id && p.DatumPovratka >= DateTime.Now);
+                        var aktivnaPosudba = posudbe?.FirstOrDefault(p => p.AlatId == alat.Id && !p.Vraceno);
 
                         if (aktivnaPosudba != null)
                         {
                             @Html.ActionLink("Vrati alat", "Vrati", "Posudba", new { id = aktivnaPosudba.Id }, new { @class = "btn btn-success btn-sm ml-2" })
                         }
                     }
+
 
                 </td>
             </tr>
@@ -161,13 +170,13 @@
 </table>
 @section Scripts {
     <script>
-       $(document).ready(function () {
-           if ($('#porukaModal').length) {
-               $('#porukaModal').modal('show');
+        $(document).ready(function () {
+            if ($('#porukaModal').length) {
+                $('#porukaModal').modal('show');
 
-              
 
-           }
+
+            }
 
             if ($('#greskaModal').length) {
                 $('#greskaModal').modal('show');

@@ -29,6 +29,8 @@ namespace ProjektAlati.Controllers
                 korisnik.Uloga = "korisnik";
                 db.Korisnici.Add(korisnik);
                 db.SaveChanges();
+
+                TempData["Poruka"] = "Registracija uspješna! Možete se prijaviti.";
                 return RedirectToAction("Login");
             }
             return View(korisnik);

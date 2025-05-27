@@ -1,19 +1,28 @@
-﻿<h2>Prijava</h2>
+﻿<h2 class="mb-4">Prijava</h2>
+
+@if (TempData["Poruka"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Poruka"]
+    </div>
+}
 
 @using (Html.BeginForm())
 {
-    <div>
-        <label>Korisničko ime</label>
-        <input type="text" name="korisnickoIme" />
+    <div class="form-group">
+        <label class="font-weight-bold">Korisničko ime</label>
+        <input type="text" name="korisnickoIme" class="form-control" placeholder="Unesite korisničko ime" />
     </div>
-    <div>
-        <label>Lozinka</label>
-        <input type="password" name="lozinka" />
+    <div class="form-group">
+        <label class="font-weight-bold">Lozinka</label>
+        <input type="password" name="lozinka" class="form-control" placeholder="Unesite lozinku" />
     </div>
-    <button type="submit">Prijava</button>
+    <button type="submit" class="btn btn-primary">Prijava</button>
 }
 
 @if (ViewBag.Poruka != null)
 {
-    <p style="color:red">@ViewBag.Poruka</p>
+    <div class="mt-3 alert alert-danger">
+        @ViewBag.Poruka
+    </div>
 }

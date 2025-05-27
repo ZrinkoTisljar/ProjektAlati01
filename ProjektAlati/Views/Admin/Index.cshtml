@@ -12,6 +12,10 @@
             <th>ID</th>
             <th>Korisničko ime</th>
             <th>Uloga</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Adresa</th>
+            <th>Posuđeni alat</th> <!-- Dodano -->
         </tr>
     </thead>
     <tbody>
@@ -21,6 +25,37 @@
                 <td>@k.Id</td>
                 <td>@k.KorisnickoIme</td>
                 <td>@k.Uloga</td>
+                <td>@k.Ime</td>
+                <td>@k.Prezime</td>
+                <td>@k.Adresa</td>
+                <td>
+                    @{
+                        List<ProjektAlati.Models.Posudba> aktivnePosudbe = ViewBag.AktivnePosudbe as List<ProjektAlati.Models.Posudba>;
+                        if (aktivnePosudbe != null)
+                        {
+                            var korisnikovePosudbe = aktivnePosudbe
+                                .Where(p => p.KorisnikId == k.Id)
+                                .ToList();
+
+                            if (korisnikovePosudbe.Any())
+                            {
+                                foreach (var posudba in korisnikovePosudbe)
+                                {
+                                    <div>@(posudba.Alat?.Naziv ?? "Obrisan alat")</div>
+                                }
+                            }
+                            else
+                            {
+                                @:—
+                            }
+                        }
+                        else
+                        {
+                            @:—
+                        }
+
+                    }
+                </td>
             </tr>
         }
     </tbody>

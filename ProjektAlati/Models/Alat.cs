@@ -17,6 +17,6 @@ namespace ProjektAlati.Models
         [Required(ErrorMessage = "Opis je obavezan.")]
         public string Opis { get; set; }
         [Required(ErrorMessage = "Morate označiti da je alat dostupan.")]
-        public bool Dostupan { get; set; }
+        public bool Dostupan { get; set; }  //dodan ?
     }
 }

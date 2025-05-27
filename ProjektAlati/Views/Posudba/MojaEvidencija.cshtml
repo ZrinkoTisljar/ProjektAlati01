@@ -17,11 +17,14 @@
     <tbody>
         @foreach (var p in Model)
         {
-        <tr>
-            <td>@p.Alat.Naziv</td>
-            <td>@p.DatumPosudbe.ToString("dd.MM.yyyy. HH:mm")</td>
-            <td>@(p.DatumPovratka.HasValue ? p.DatumPovratka.Value.ToString("dd.MM.yyyy. HH:mm") : "Još nije vraćen")</td>
-        </tr>
+            <tr>
+                <td>@p.Alat.Naziv</td>
+                <td>@p.DatumPosudbe.ToString("dd.MM.yyyy. HH:mm")</td>
+                <td>@(p.DatumPovratka.HasValue ? p.DatumPovratka.Value.ToString("dd.MM.yyyy. HH:mm") : "Još nije vraćen")</td>
+                <td>
+                    @Html.ActionLink("PDF potvrda", "PotvrdaPosudbe", "Pdf", new { id = p.Id }, new { @class = "btn btn-outline-secondary btn-sm" })
+                            </td>
+            </tr>
         }
     </tbody>
 </table>

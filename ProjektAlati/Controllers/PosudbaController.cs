@@ -70,12 +70,12 @@ namespace ProjektAlati.Controllers
 
         public ActionResult Vrati(int id)
         {
-            var posudba = db.Posudbe.FirstOrDefault(p => p.Id == id && p.DatumPovratka >= DateTime.Now);
+            var posudba = db.Posudbe.FirstOrDefault(p => p.Id == id && !p.Vraceno);
 
             if (posudba == null)
             {
-                TempData["Greska"] = "Posudba nije pronađena ili je već istekla.";
-                return RedirectToAction("Index");
+                TempData["Greska"] = "Posudba nije pronađena ili je već vraćena.";
+                return RedirectToAction("Index", "Alat");
             }
 
             // Osvježi status alata
@@ -83,8 +83,9 @@ namespace ProjektAlati.Controllers
             if (alat != null)
                 alat.Dostupan = true;
 
-            // Ažuriraj datum povratka na trenutni
+            // Ažuriraj povrat
             posudba.DatumPovratka = DateTime.Now;
+            posudba.Vraceno = true;
 
             db.SaveChanges();
 

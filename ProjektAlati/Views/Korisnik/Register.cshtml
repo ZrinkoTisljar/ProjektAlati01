@@ -1,16 +1,44 @@
 ﻿@model ProjektAlati.Models.Korisnik
 
-<h2>Registracija</h2>
+<h2 class="mb-4">Registracija</h2>
+
+@if (TempData["Greska"] != null)
+{
+    <div class="alert alert-danger">@TempData["Greska"]</div>
+}
 
 @using (Html.BeginForm())
 {
-    <div>
-        @Html.LabelFor(m => m.KorisnickoIme)
-        @Html.TextBoxFor(m => m.KorisnickoIme)
+    <div class="form-group">
+        @Html.LabelFor(m => m.KorisnickoIme, htmlAttributes: new { @class = "font-weight-bold" })
+        @Html.TextBoxFor(m => m.KorisnickoIme, new { @class = "form-control", placeholder = "Unesite korisničko ime" })
+        @Html.ValidationMessageFor(m => m.KorisnickoIme, "", new { @class = "text-danger" })
     </div>
-    <div>
-        @Html.LabelFor(m => m.Lozinka)
-        @Html.PasswordFor(m => m.Lozinka)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Lozinka, htmlAttributes: new { @class = "font-weight-bold" })
+        @Html.PasswordFor(m => m.Lozinka, new { @class = "form-control", placeholder = "Unesite lozinku" })
+        @Html.ValidationMessageFor(m => m.Lozinka, "", new { @class = "text-danger" })
     </div>
-    <button type="submit">Registriraj se</button>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Ime)
+        @Html.TextBoxFor(m => m.Ime, new { @class = "form-control", placeholder = "Unesite ime" })
+        @Html.ValidationMessageFor(m => m.Ime, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Prezime)
+        @Html.TextBoxFor(m => m.Prezime, new { @class = "form-control", placeholder = "Unesite prezime" })
+        @Html.ValidationMessageFor(m => m.Prezime, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Adresa)
+        @Html.TextBoxFor(m => m.Adresa, new { @class = "form-control", placeholder = "Unesite adresu" })
+        @Html.ValidationMessageFor(m => m.Adresa, "", new { @class = "text-danger" })
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Registriraj se</button>
 }
